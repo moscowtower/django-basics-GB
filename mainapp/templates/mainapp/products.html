@@ -60,15 +60,16 @@
                             <div class="card h-100">
                                 <a href="#">
                                     <img class="card-img-top"
-                                         src="{% static product.img %}"
-                                         alt="">
+                                         src="/media/{{ product.image }}"
+                                         alt="{{ product.short_description }}">
                                 </a>
                                 <div class="card-body">
                                     <h4 class="card-title">
-                                        <a href="#">{{ product.name|capfirst }}</a>
+                                        <a href="#">{{ product.name|title }}</a>
                                     </h4>
+                                    <h3 style="font-size:15px; opacity:0.6">{{ product.category.name}}</h3>
                                     <h5>{{ product.price }} руб.</h5>
-                                    <p class="card-text">{{ product.description|capfirst }}</p>
+                                    <p class="card-text">{{ product.short_description|capfirst }}</p>
                                 </div>
                                 <div class="card-footer text-center">
                                     <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
