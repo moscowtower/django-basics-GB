@@ -58,9 +58,9 @@
                     {% for product in products %}
                         <div class="col-lg-4 col-md-6 mb-4">
                             <div class="card h-100">
-                                <a href="#">
+                                <a href="{% url 'products:product' product.pk %}">
                                     <img class="card-img-top"
-                                         src="/media/{{ product.image }}"
+                                         src="/static/{{product.image}}"
                                          alt="{{ product.short_description }}">
                                 </a>
                                 <div class="card-body">

@@ -1,6 +1,5 @@
-{% load staticfiles %}
-
 <!DOCTYPE html>
+{% load staticfiles %}
 <html lang="en">
 
 <head>
@@ -40,15 +39,18 @@
                     <a class="nav-link" href="{% url 'products:index' %}">Каталог <i class="fas fa-shopping-bag"></i> </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="auth/login.html">Войти <i class="fas fa-sign-in-alt"></i></a>
+                    <a class="nav-link" href="{% url 'auth:register' %}">Регистрация <i class="fas date-icon"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="auth/profile.html">Валерий П.
+                    <a class="nav-link" href="{% url 'auth:login' %}">Войти <i class="fas fa-sign-in-alt"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'auth:edit' %}"> {{ user.username }}
                         <i class="fas fa-user-circle"></i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Выйти <i class="fas fa-sign-out-alt"></i></a>
+                    <a class="nav-link" href="{% url 'auth:logout' %}">Выйти <i class="fas fa-sign-out-alt"></i></a>
                 </li>
             </ul>
         </div>
@@ -56,7 +58,6 @@
 </nav>
 
 {% block content %}{% endblock %}
-
 {% block footer %}{% endblock %}
 <!-- Bootstrap core JavaScript -->
 <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
