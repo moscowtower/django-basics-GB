@@ -20,9 +20,17 @@
 <body>
 	<div class="container">
         <div class="login">
+            {% if not request.user.is_authenticated %}
             <div class="h2 text-center head">
                 Вход в систему
             </div>
+            {% endif %}
+
+            {% if request.user.is_authenticated %}
+            <div class="h2 text-center head">
+                Изменение данных
+            </div>
+            {% endif %}
 
             {% block content %}
 
