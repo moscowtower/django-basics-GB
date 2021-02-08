@@ -2,8 +2,17 @@ from django.shortcuts import render, get_object_or_404
 from mainapp.models import Product, ProductCategory
 from datetime import datetime
 from basketapp.models import Basket
+
+
 def index(request):
     return render(request, 'mainapp/index.html')
+
+
+def get_basket(user):
+    if user.is_authenticated:
+        return Basket.objects.filter(user=user)
+    else:
+        return []
 
 
 def products(request, pk=None):
@@ -55,3 +64,14 @@ def main(request):
 
     content = {'title': title, 'products': products}
     return render(request, 'mainapp/index.html', content)
+
+
+def product(request, pk):
+    title = 'продукты'
+    content = {
+        'title': title,
+        'product': get_object_or_404(Product, pk=pk),
+        'basket': get_basket(request.user),
+    }
+
+    return render(request, 'mainapp/product.html', content)

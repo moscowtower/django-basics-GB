@@ -13,13 +13,18 @@ class Basket(models.Model):
     def __str__(self):
         return f'User: {self.user.username} | Products: {self.product.name}'
 
+    @property
     def sum(self):
         return self.quantity * self.product.price
 
+    @property
     def total_quantity(self):
-        baskets = Basket.objects.filter(user=self.user)
-        return sum(basket.quantity for basket in baskets)
+        _items = Basket.objects.filter(user=self.user)
+        _totalquantity = sum(list(map(lambda x: x.quantity, _items)))
+        return _totalquantity
 
+    @property
     def total_sum(self):
-        baskets = Basket.objects.filter(user=self.user)
-        return sum(basket.sum() for basket in baskets)
+        _items = Basket.objects.filter(user=self.user)
+        _total_sum = sum(list(map(lambda x: x.sum, _items)))
+        return _total_sum
