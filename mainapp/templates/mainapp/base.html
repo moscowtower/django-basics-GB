@@ -38,12 +38,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'products:index' %}">Каталог <i class="fas fa-shopping-bag"></i> </a>
                 </li>
+                {% if not request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'auth:register' %}">Регистрация <i class="fas date-icon"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'auth:login' %}">Войти <i class="fas fa-sign-in-alt"></i></a>
                 </li>
+                {% endif %}
+                {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'auth:edit' %}"> {{ user.username }}
                         <i class="fas fa-user-circle"></i>
@@ -52,6 +55,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'auth:logout' %}">Выйти <i class="fas fa-sign-out-alt"></i></a>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </div>
