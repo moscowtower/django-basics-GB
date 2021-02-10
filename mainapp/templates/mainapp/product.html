@@ -1,0 +1,39 @@
+
+{% extends 'mainapp/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+    <link href="{% static 'css/products.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+  <div class="details">
+
+    <div class="details-products">
+      <div class="details-slider">
+        <div class="slider-product">
+          <img src="/static/{{ product.image }}"
+               alt="{{ product.short_desc }}"
+               style="width: 150px; height: 150px">
+        </div>
+      </div>
+
+      <div class="description">
+        <h3 class="big-bold">{{ product.name | title}}</h3>
+        <br>
+        <p class="price"> {{ product.price }} <span>руб</span></p>
+        <a href="{% url 'basket:basket_add' product.pk %}" class="red-button">
+          заказать 
+          <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </a>
+        <div class="description-text">
+          {{ product.description | capfirst}}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="clr"></div>
+
+{% endblock %}
