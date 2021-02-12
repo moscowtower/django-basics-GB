@@ -1,0 +1,162 @@
+{% extends 'adminapp/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="mycontainer">
+    <div class="card-footer">
+  <div class="h2 text-center head"> Администраторы </div>
+      </div>
+<div class="users_list" id="admins">
+    {% for object in objects %}
+    {% if object.is_superuser and object.is_active %}
+      <div
+       class="user_record {% if not object.is_active %}not_active{% endif %}">
+        <img
+          src="/media/{{ object.avatar|default:'users_avatars/default.png' }}"
+          alt="{{ object.username }}">
+        <div class="user_role">
+            <i>Администратор</i>
+          <br>
+          <div class="user_name">
+          <p><strong>{{ object.username }}</strong></p>
+	    <p>
+            {% if object.first_name %}
+              <b>{{ object.first_name|title }}</b>
+                {% if object.last_name %}
+                  <p>{{ object.last_name|title }}</p>
+                {% endif %}
+            {% endif %}
+          </p>
+        </div>
+          <button>
+            <a href="{% url 'admin:user_update' object.pk %}">
+              редактировать
+            </a>
+          </button>
+        </div>
+        <div class="user_age">
+          <b>Возраст:</b>
+          {{ object.age }} лет
+        </div>
+        <div class="user_email">
+          <b>e-mail:</b>
+          {% if object.email %} {{ object.email }} {% else %} None {% endif %}
+        </div>
+        <div class="user_lastlogin">
+          <b>Последний логин:</b>
+          <br>
+          {{ object.last_login }}
+        </div>
+      </div>
+
+
+   {% endif %}
+  {% endfor %}
+</div>
+<hr>
+  <div class="mycontainer">
+    <div class="card-footer">
+  <div class="h2 text-center head"> Пользователи </div>
+    </div>
+  <div class="users_list" id="users">
+    {% for object in objects %}
+    {% if not object.is_superuser and object.is_active %}
+      <div
+       class="user_record {% if not object.is_active %}not_active{% endif %}">
+        <img
+          src="/media/{{ object.avatar|default:'users_avatars/default.png' }}"
+          alt="{{ object.username }}">
+        <hr>
+        <div class="user_role">
+          <i>Пользователь</i>
+          <div class="user_name">
+          <p><b>{{ object.username }}</b></p>
+	    <p>
+            {% if object.first_name %}
+              <b>{{ object.first_name|title }}</b>
+                {% if object.last_name %}
+                  <p>{{ object.last_name|title }}</p>
+                {% endif %}
+            {% endif %}
+          </p>
+        </div>
+          <button>
+            <a href="{% url 'admin:user_update' object.pk %}">
+              редактировать
+            </a>
+          </button>
+        </div>
+        <div class="user_age">
+          <b>Возраст:</b>
+          {{ object.age }} лет
+        </div>
+        <div class="user_email">
+          <b>e-mail:</b>
+          {% if object.email %} {{ object.email }} {% else %} None {% endif %}
+        </div>
+        <div class="user_lastlogin">
+          <b>Последний логин:</b>
+          <br>
+          {{ object.last_login }}
+        </div>
+      </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+</div>
+  <hr>
+<div class="mycontainer">
+  <div class="card-footer">
+  <div class="h2 text-center head"> Деактивированные Пользователи </div>
+  </div>
+  <div class="users_list" id="deactivated">
+    {% for object in objects %}
+    {% if not object.is_superuser and  not object.is_active %}
+      <div
+       class="user_record {% if not object.is_active %}not_active{% endif %}">
+        <img
+          src="/media/{{ object.avatar|default:'users_avatars/default.png' }}"
+          alt="{{ object.username }}">
+        <hr>
+        <div class="user_role">
+          <i>Пользователь</i>
+          <div class="user_name">
+          <p><b>{{ object.username }}</b></p>
+	    <p>
+            {% if object.first_name %}
+              <b>{{ object.first_name|title }}</b>
+                {% if object.last_name %}
+                  <p>{{ object.last_name|title }}</p>
+                {% endif %}
+            {% endif %}
+          </p>
+        </div>
+          <button>
+            <a href="{% url 'admin:user_update' object.pk %}">
+              редактировать
+            </a>
+          </button>
+        </div>
+        <div class="user_age">
+          <b>Возраст:</b>
+          {{ object.age }} лет
+        </div>
+        <div class="user_email">
+          <b>e-mail:</b>
+          {% if object.email %} {{ object.email }} {% else %} None {% endif %}
+        </div>
+        <div class="user_lastlogin">
+          <b>Последний логин:</b>
+          <br>
+          {{ object.last_login }}
+        </div>
+      </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+</div>
+
+
+{% endblock %}

@@ -52,6 +52,14 @@
                         <i class="fas fa-user-circle"></i>
                     </a>
                 </li>
+                {% if request.user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin:index' %}">
+                        Админка
+                    </a>
+                </li>
+                {% endif %}
+                </li>
 
                 <li class="nav-item">
                     {% if baskets %}

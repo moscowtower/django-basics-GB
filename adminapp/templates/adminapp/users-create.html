@@ -1,0 +1,15 @@
+{% extends 'adminapp/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<h1 class="mt-4">Создание пользователя</h1>
+<form action="{% url 'admin:user_create' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="form-row">
+        <div class="col-lg-12" style="margin-top: 33px;">
+            <input class="btn btn-info btn-block" type="submit" value="Сохранить">
+        </div>
+    </div>
+</form>
+{% endblock %}
