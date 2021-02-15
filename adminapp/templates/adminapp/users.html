@@ -7,7 +7,7 @@
   <div class="h2 text-center head"> Администраторы </div>
       </div>
 <div class="users_list" id="admins">
-    {% for object in objects %}
+    {% for object in object_list %}
     {% if object.is_superuser and object.is_active %}
       <div
        class="user_record {% if not object.is_active %}not_active{% endif %}">
@@ -59,7 +59,7 @@
   <div class="h2 text-center head"> Пользователи </div>
     </div>
   <div class="users_list" id="users">
-    {% for object in objects %}
+    {% for object in object_list %}
     {% if not object.is_superuser and object.is_active %}
       <div
        class="user_record {% if not object.is_active %}not_active{% endif %}">
@@ -111,7 +111,7 @@
   <div class="h2 text-center head"> Деактивированные Пользователи </div>
   </div>
   <div class="users_list" id="deactivated">
-    {% for object in objects %}
+    {% for object in object_list %}
     {% if not object.is_superuser and  not object.is_active %}
       <div
        class="user_record {% if not object.is_active %}not_active{% endif %}">
