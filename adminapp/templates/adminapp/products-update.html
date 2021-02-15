@@ -1,0 +1,39 @@
+{% extends 'adminapp/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<h1 class="mt-4">Редактирование продукта</h1>
+<form action="{% url 'admin:product_update' product.pk %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>
+    <label for="id_name">Наименование:</label>
+        <input type="text" name="name" maxlength="150" class="form-control" required id="id_name" value="{{product.name}}">
+    <label for="id_image">Аватар:</label>
+        <input type="file" name="image" accept="image/*" maxlength="2" id="id_image" class="form-control">
+    <label for="id_description">Описание:</label>
+        <input type="text" name="description" maxlength="150" class="form-control" required id="id_description" value="{{product.description}}">
+    <label for="id_short_description">Краткое описание:</label>
+        <input type="text" name="short_description" maxlength="150" class="form-control" required id="id_short_description" value="{{product.short_description}}">
+    <label for="id_price">Цена:</label>
+        <input type="number" name="price" maxlength="150" class="form-control" required id="id_price" value="{{product.price}}">
+    <label for="id_quantity">Количество:</label>
+        <input type="number" name="quantity" maxlength="150" class="form-control" required id="id_quantity" value="{{product.quantity}}">
+    </p>
+    <label for="id_quantity">Категория:</label>
+    {{form.category}}
+    {{product.pk}}
+    <div class="form-row">
+        <div class="col-lg-12" style="margin-top: 33px;">
+            <input class="btn btn-info btn-block" type="submit" value="Сохранить">
+        </div>
+    </div>
+</form>
+    <div class="row">
+            <div class="col-lg-12" style="margin-top: 33px;">
+                <a href="{% url 'admin:product_delete' product.pk %}">
+                    <button class="btn btn-danger btn-block">Удалить продукт</button>
+                </a>
+            </div>
+        </div>
+
+{% endblock %}

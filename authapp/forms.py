@@ -19,6 +19,7 @@ class ShopUserRegisterForm(UserCreationForm):
         fields = ('username',
                   'password1',
                   'password2',
+                  'email',
                   'age',
                   'avatar')
 
@@ -68,9 +69,11 @@ class ShopUserEditForm(UserChangeForm):
         data = self.cleaned_data['avatar']
         if data and len(data) > (10000 * 1024):
             raise forms.ValidationError('Размер аватара не должен превышать 10МБ!')
-        w, h = get_image_dimensions(data)
-        max_w = max_h = 1500
-        if w > max_w or h > max_h:
-            raise forms.ValidationError('Размер аватара не должен превышать %s x %d px.' % (max_h, max_w))
+        if data:
+            w, h = get_image_dimensions(data)
+            max_w = max_h = 1500
+            if w > max_w or h > max_h:
+                raise forms.ValidationError('Размер аватара не должен превышать %s x %d px.' % (max_h, max_w))
 
         return data
+
