@@ -1,9 +1,12 @@
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse, Http404
 from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+
 from basketapp.models import Basket
+from .models import ShopUser
+from .utils import send_verify_email
 
 def login(request):
     title = 'вход'
@@ -35,7 +38,9 @@ def register(request):
     if request.method == 'POST':
         register_form = ShopUserRegisterForm(data=request.POST)
         if register_form.is_valid():
-            register_form.save()
+            user = register_form.save()
+            send_verify_email(user)
+            messages.success(request, 'Проверьте почту')
             return HttpResponseRedirect(reverse('auth:login'))
     else:
         register_form = ShopUserRegisterForm()
@@ -62,3 +67,17 @@ def edit(request):
 
     return render(request, 'authapp/edit.html', content)
 
+
+def verify(request, user_id, hash):
+    user = ShopUser.objects.get(pk=user_id)
+    print(user.activation_key, hash)
+    if user.activation_key == hash and not user.is_activation_key_expired():
+        user.is_active = True
+        user.activation_key = None
+        user.save()
+        auth.login(request, user)
+        return HttpResponseRedirect(reverse('index'))
+
+    raise Http404('Hello')
+
+    #return HttpResponse(f'{user_id} {hash}')
