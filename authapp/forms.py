@@ -1,11 +1,12 @@
-import hashlib, random
+import hashlib
+import random
 
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 import django.forms as forms
 from django.core.files.images import get_image_dimensions
 
 from .models import ShopUser
-
+from .models import ShopUserProfile
 
 class ShopUserLoginForm(AuthenticationForm):
     class Meta:
@@ -89,3 +90,12 @@ class ShopUserEditForm(UserChangeForm):
 
         return data
 
+class ShopUserProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = ShopUserProfile
+        fields = ('tagline', 'aboutMe', 'gender')
+
+    def __init__(self, *args, **kwargs):
+        super(ShopUserProfileEditForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'

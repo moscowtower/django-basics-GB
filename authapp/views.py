@@ -3,10 +3,13 @@ from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditF
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.db import transaction
+from authapp.forms import ShopUserProfileEditForm
 
 from basketapp.models import Basket
 from .models import ShopUser
 from .utils import send_verify_email
+
 
 def login(request):
     title = 'вход'
@@ -70,7 +73,6 @@ def edit(request):
 
 def verify(request, user_id, hash):
     user = ShopUser.objects.get(pk=user_id)
-    print(user.activation_key, hash)
     if user.activation_key == hash and not user.is_activation_key_expired():
         user.is_active = True
         user.activation_key = None
@@ -80,4 +82,25 @@ def verify(request, user_id, hash):
 
     raise Http404('Hello')
 
-    #return HttpResponse(f'{user_id} {hash}')
+
+@transaction.atomic
+def edit(request):
+    title = 'редактирование'
+
+    if request.method == 'POST':
+        edit_form = ShopUserEditForm(request.POST, request.FILES, instance=request.user)
+        profile_form = ShopUserProfileEditForm(request.POST, instance=request.user.shopuserprofile)
+        if edit_form.is_valid() and profile_form.is_valid():
+            edit_form.save()
+            return HttpResponseRedirect(reverse('auth:edit'))
+    else:
+        edit_form = ShopUserEditForm(instance=request.user)
+        profile_form = ShopUserProfileEditForm(instance=request.user.shopuserprofile)
+
+    content = {
+        'title': title,
+        'edit_form': edit_form,
+        'profile_form': profile_form
+    }
+
+    return render(request, 'authapp/edit.html', content)
