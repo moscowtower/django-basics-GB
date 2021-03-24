@@ -3,7 +3,7 @@
 
 {% block content %}
 <h1 class="mt-4">Создание пользователя</h1>
-<form action="{% url 'admin:user_create' %}" method="post" enctype="multipart/form-data">
+<form action="{% url 'admins:user_create' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <div class="form-row">
