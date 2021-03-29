@@ -54,20 +54,23 @@
                 </li>
                 {% if request.user.is_superuser %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'admin:users' %}">
+                    <a class="nav-link" href="{% url 'admins:users' %}">
                         Админка
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin:index' %}">
+                        DjangoАдминка
                     </a>
                 </li>
                 {% endif %}
                 </li>
 
                 <li class="nav-item">
-                    {% if baskets %}
-                    <a class="nav-link" href="{% url 'auth:edit' %}">
-                        Корзина {{ baskets.0.total_quantity}} шт.
-                    </a>
-                    {% endif %}
-                </li>
+                         <a class="nav-link" href="{% url 'auth:edit' %}">{{ user_basket.0.total_sum }}
+                             <i class="fas fa-shopping-basket"></i>
+                         </a>
+                     </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'auth:logout' %}">Выйти <i class="fas fa-sign-out-alt"></i></a>
                 </li>

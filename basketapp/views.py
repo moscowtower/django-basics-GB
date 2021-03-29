@@ -17,7 +17,7 @@ def basket_edit(request, id, quantity):
         else:
             basket.delete()
         baskets = Basket.objects.filter(user=request.user)
-    content = {'baskets': baskets}
+    content = {'user_basket': baskets}
     result = render_to_string('basketapp/basket.html', content)
     return JsonResponse({'result': result})
 
@@ -33,9 +33,9 @@ def basket_add(request, product_id):
         print('not baskets')
     else:
         basket = baskets.first()
-    print(baskets)
     basket.quantity += 1
     basket.save()
+    print(basket)
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

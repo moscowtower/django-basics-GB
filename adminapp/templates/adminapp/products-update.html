@@ -3,7 +3,7 @@
 
 {% block content %}
 <h1 class="mt-4">Редактирование продукта</h1>
-<form action="{% url 'admin:product_update' product.pk %}" method="post" enctype="multipart/form-data">
+<form action="{% url 'admins:product_update' product.pk %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <p>
     <label for="id_name">Наименование:</label>
@@ -28,7 +28,7 @@
     </div>
 </form>
     <div class="row">
-        <form action="{% url 'admin:product_delete' object.pk %}" method="post">
+        <form action="{% url 'admins:product_delete' object.pk %}" method="post">
             {% csrf_token %}
             <input class="btn btn-danger btn-block" type="submit" value="Удалить продукт {{object.name}}" style="margin-top: 33px;">
         </form>
