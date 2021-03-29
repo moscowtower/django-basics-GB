@@ -2,12 +2,16 @@ from django.shortcuts import get_object_or_404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.db import transaction
 from django.forms import inlineformset_factory
+from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.views.generic.detail import DetailView
 
 from basketapp.models import Basket
 from ordersapp.models import Order, OrderItem
+from mainapp.models import Product
 from ordersapp.forms import OrderItemForm
 
 
@@ -17,6 +21,9 @@ class OrderList(ListView):
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
 
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(ListView, self).dispatch(*args, **kwargs)
 
 class OrderItemsCreate(CreateView):
     model = Order
@@ -36,7 +43,8 @@ class OrderItemsCreate(CreateView):
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
-                basket_items.delete()
+                    basket_items[num].delete()
+
             else:
                 formset = OrderFormSet()
 
@@ -114,3 +122,12 @@ def order_forming_complete(request, pk):
     order.save()
 
     return HttpResponseRedirect(reverse('ordersapp:orders_list'))
+
+
+def get_product_price(request, pk):
+    if request.is_ajax():
+        product = Product.objects.filter(pk=int(pk)).first()
+        if product:
+            return JsonResponse({'price': product.price})
+        else:
+            return JsonResponse({'price': 0})
