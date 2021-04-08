@@ -3,3 +3,4 @@ Pillow==8.1.0
 pytz==2020.5
 sqlparse==0.4.1
 social-auth-app-django==4.0.0
+python-memcached

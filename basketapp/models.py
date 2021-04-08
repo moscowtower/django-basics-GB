@@ -1,15 +1,27 @@
 from django.db import models
 from django.conf import settings
 from mainapp.models import Product
+from django.utils.functional import cached_property
 
 class BasketQuerySet(models.QuerySet):
 
-   def delete(self, *args, **kwargs):
-       for object in self:
-           object.product.quantity += object.quantity
-           object.product.save()
-       super(BasketQuerySet, self).delete(*args, **kwargs)
+    def delete(self, *args, **kwargs):
+        for object in self:
+            object.product.quantity += object.quantity
+            object.product.save()
+        super(BasketQuerySet, self).delete(*args, **kwargs)
 
+    @cached_property
+    def get_items_cached(self):
+        return self.user.basket.select_related()
+
+    def total_quantity(self):
+        baskets = self.get_items_cached
+        return sum(basket.quantity for basket in baskets)
+
+    def total_sum(self):
+        baskets = self.get_items_cached
+        return sum(basket.sum() for basket in baskets)
 
 class Basket(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,

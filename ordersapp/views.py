@@ -3,6 +3,7 @@ from django.urls import reverse, reverse_lazy
 from django.db import transaction
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.cache import cache_page
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
@@ -35,7 +36,6 @@ class OrderItemsCreate(CreateView):
         if self.request.POST:
             formset = OrderFormSet(self.request.POST)
         else:
-            # formset = OrderFormSet()
             basket_items = Basket.objects.filter(user=self.request.user)
             if len(basket_items):
                 OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=len(basket_items))
@@ -124,10 +124,9 @@ def order_forming_complete(request, pk):
     return HttpResponseRedirect(reverse('ordersapp:orders_list'))
 
 
+@cache_page(120)
 def get_product_price(request, pk):
-    if request.is_ajax():
-        product = Product.objects.filter(pk=int(pk)).first()
-        if product:
-            return JsonResponse({'price': product.price})
-        else:
-            return JsonResponse({'price': 0})
+    product = Product.objects.filter(pk=int(pk)).first()
+    if product:
+        return JsonResponse({'price': product.price})
+    return JsonResponse({'price': 0})

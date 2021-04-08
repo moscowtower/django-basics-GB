@@ -11,6 +11,9 @@ from adminapp.forms import AdminShopUserEditForm, ProductForm
 from mainapp.models import Product, ProductCategory
 from authapp.forms import ShopUser
 
+@user_passes_test(lambda u: u.is_superuser)
+def index(request):
+    return render(request, 'adminapp/index.html')
 
 class UsersListView(ListView):
     model = ShopUser

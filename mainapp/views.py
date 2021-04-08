@@ -1,77 +1,28 @@
+from datetime import datetime
+
 from django.shortcuts import render, get_object_or_404
 from mainapp.models import Product, ProductCategory
-from datetime import datetime
+from django.views.generic import ListView
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 from basketapp.models import Basket
 
+@method_decorator(cache_page(120), name='dispatch')
+class ProductView(ListView):
+    model = Product
+    context_object_name = 'products'
+    template_name = 'mainapp/products.html'
+    paginate_by = 3
 
-def index(request):
-    return render(request, 'mainapp/index.html')
+    def get_queryset(self):
+        data = self.kwargs
+        if data.get('category_id'):
+            return Product.objects.filter(category_id=data['category_id'])
+        return Product.objects.all()
 
-
-def get_basket(user):
-    if user.is_authenticated:
-        return Basket.objects.filter(user=user)
-    else:
-        return []
-
-
-def products(request, pk=None):
-    links_menu = ProductCategory.objects.all()
-    basket = []
-    if request.user.is_authenticated:
-        basket = Basket.objects.filter(user=request.user)
-
-    if pk is not None:
-        if pk == 0:
-            products = Product.objecs.all().order_by('price')
-            category = {'name': 'все'}
-        else:
-            category = get_object_or_404(ProductCategory, pk=pk)
-            products = Product.objects.filter(category__pk=pk).order_by('price')
-
-            context = {
-                'products': products,
-                'categories': category,
-                'links_menu': links_menu,
-                'title': 'каталог',
-                'basket': basket
-            }
-        return(render(request), 'mainapp/products.html', context)
-
-    context = {
-        'products': Product.objects.all(),
-        'categories': ProductCategory.objects.all(),
-        'links_menu': links_menu,
-        'title': 'каталог'
-    }
-
-    return render(request, 'mainapp/products.html', context)
-
-
-def category(request, pk):
-    context = {
-        'products': Product.objects.filter(category=pk),
-        'categories': ProductCategory.objects.all(),
-        'title': ProductCategory.objects.get(pk=pk)
-    }
-    return render(request, 'mainapp/products.html', context)
-
-
-def main(request):
-    title = 'главная'
-
-    products = Product.objects.all()[:4]
-
-    content = {'title': title, 'products': products}
-    return render(request, 'mainapp/index.html', content)
-
-
-def product(request, pk):
-    title = 'продукты'
-    content = {
-        'title': title,
-        'product': get_object_or_404(Product, pk=pk),
-        'basket': get_basket(request.user),
-    }
-
-    return render(request, 'mainapp/product.html', content)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['categories'] = ProductCategory.objects.all()
+        context['categories'] = ProductCategory.get_all()
+        return context
