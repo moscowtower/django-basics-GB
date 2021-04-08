@@ -28,7 +28,7 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'index' %}">GeekShop,  {% now "Y" %}</a>
+        <a class="navbar-brand" href="{% url 'products:index' %}">GeekShop,  {% now "Y" %}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -36,7 +36,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'products:index' %}">Каталог <i class="fas fa-shopping-bag"></i> </a>
+                    <a class="nav-link" href="{% url 'products:products' %}">Каталог <i class="fas fa-shopping-bag"></i> </a>
                 </li>
                 {% if not request.user.is_authenticated %}
                 <li class="nav-item">
@@ -54,20 +54,23 @@
                 </li>
                 {% if request.user.is_superuser %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'admin:users' %}">
+                    <a class="nav-link" href="{% url 'admins:users' %}">
                         Админка
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin:index' %}">
+                        DjangoАдминка
                     </a>
                 </li>
                 {% endif %}
                 </li>
 
                 <li class="nav-item">
-                    {% if baskets %}
-                    <a class="nav-link" href="{% url 'auth:edit' %}">
-                        Корзина {{ baskets.0.total_quantity}} шт.
-                    </a>
-                    {% endif %}
-                </li>
+                         <a class="nav-link" href="{% url 'auth:edit' %}">{{ baskets.total_sum }}
+                             <i class="fas fa-shopping-basket"></i>
+                         </a>
+                     </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'auth:logout' %}">Выйти <i class="fas fa-sign-out-alt"></i></a>
                 </li>

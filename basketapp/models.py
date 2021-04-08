@@ -1,6 +1,27 @@
 from django.db import models
 from django.conf import settings
 from mainapp.models import Product
+from django.utils.functional import cached_property
+
+class BasketQuerySet(models.QuerySet):
+
+    def delete(self, *args, **kwargs):
+        for object in self:
+            object.product.quantity += object.quantity
+            object.product.save()
+        super(BasketQuerySet, self).delete(*args, **kwargs)
+
+    @cached_property
+    def get_items_cached(self):
+        return self.user.basket.select_related()
+
+    def total_quantity(self):
+        baskets = self.get_items_cached
+        return sum(basket.quantity for basket in baskets)
+
+    def total_sum(self):
+        baskets = self.get_items_cached
+        return sum(basket.sum() for basket in baskets)
 
 class Basket(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -9,6 +30,8 @@ class Basket(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(verbose_name='количество', default=0)
     add_datetime = models.DateTimeField(verbose_name='время', auto_now_add=True)
+
+    objects = BasketQuerySet.as_manager()
 
     def __str__(self):
         return f'User: {self.user.username} | Products: {self.product.name}'
@@ -28,3 +51,8 @@ class Basket(models.Model):
         _items = Basket.objects.filter(user=self.user)
         _total_sum = sum(list(map(lambda x: x.sum, _items)))
         return _total_sum
+
+    def delete(self):
+        self.product.quantity += self.quantity
+        self.product.save()
+        super(self.__class__, self).delete()

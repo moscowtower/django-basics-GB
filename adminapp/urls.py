@@ -5,7 +5,7 @@ from django.urls import path
 app_name = 'adminapp'
 
 urlpatterns = [
-    path('', mainapp.index, name='index'),
+    path('', adminapp.index, name='index'),
 
     path('users/create/', adminapp.UsersCreateView.as_view(), name='user_create'),
     path('users/read/', adminapp.UsersListView.as_view(), name='users'),
